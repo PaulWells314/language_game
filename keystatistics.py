@@ -3,7 +3,12 @@ import numpy as np
 import math
 from numpy import linalg as LA
 
-titles = ["" for x in range(25)]
+num_abstracts = 0
+for f in glob.glob("*.keys"):
+    num_abstracts = num_abstracts + 1
+print("num abstracts ", num_abstracts)
+
+titles = ["" for x in range(num_abstracts)]
 
 dict_set = {}
 for f in glob.glob("*.keys"):
@@ -25,7 +30,7 @@ for f in glob.glob("*.keys"):
 count = 0
 for w in dict_set:
     if len(dict_set[w]) > 1:
-        vec = np.zeros(25)
+        vec = np.zeros(num_abstracts)
         for d in dict_set[w]:
             id = int(d.lstrip("paper_").rstrip(".txt.keys"))
             vec[id-1] = 1
@@ -49,5 +54,5 @@ for w in dict_set:
 print("")
 
 
-for i in range(25):
+for i in range(num_abstracts):
     print("{0:30} {1: 2.4f} {2: 2.4f} {3: 2.4f} {4: 2.4f} {5: 2.4f}".format(titles[i] ,s[i]*VT[i][0], s[i]*VT[i][1], s[i]*VT[i][2], s[i]*VT[i][3], s[i]*(VT[i][4]) ) )
