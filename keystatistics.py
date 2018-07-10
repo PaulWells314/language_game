@@ -29,7 +29,7 @@ for w in dict_set:
         for d in dict_set[w]:
             id = int(d.lstrip("paper_").rstrip(".txt.keys"))
             vec[id-1] = 1
-#       print(vec)
+
         if count == 0:
             X = vec
         else:
@@ -41,18 +41,13 @@ X = X -m
 
 U, s, VT = LA.svd(X, full_matrices = False)
 
-Z = np.transpose(U)
-
-print("Z: shape ", str(np.shape(Z)))
-
 count = 0
 for w in dict_set:
    if len(dict_set[w]) > 1:
-      print( "{0:20} {1: 2.4f} {2: 2.4f} {3: 2.4f} {4: 2.4f}".format(w, Z[0][count], Z[1][count], Z[2][count], Z[3][count]) )
+      print( "{0:20} {1: 2.4f} {2: 2.4f} {3: 2.4f} {4: 2.4f}".format(w, U[count][0], U[count][1], U[count][2], U[count][3]) )
       count = count + 1
 print("")
-#print("Score 0: ",np.transpose(U)[0])
-#print("Score 1: ",np.transpose(U)[1])
+
 
 for i in range(25):
-    print("{0:30} {1: 2.4f} {2: 2.4f} {3: 2.4f} {4: 2.4f} {5: 2.4f}".format(titles[i] ,s[i]*np.transpose(VT[0])[i], s[i]*np.transpose(VT[1])[i], s[i]*np.transpose(VT[2])[i], s[i]*np.transpose(VT[3])[i], s[i]*np.transpose(VT[4])[i]) )
+    print("{0:30} {1: 2.4f} {2: 2.4f} {3: 2.4f} {4: 2.4f} {5: 2.4f}".format(titles[i] ,s[i]*VT[i][0], s[i]*VT[i][1], s[i]*VT[i][2], s[i]*VT[i][3], s[i]*(VT[i][4]) ) )
