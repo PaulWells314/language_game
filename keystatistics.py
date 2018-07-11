@@ -46,6 +46,7 @@ X = X -m
 
 U, s, VT = LA.svd(X, full_matrices = False)
 
+# Eigenvectors are columns of U  
 count = 0
 for w in dict_set:
    if len(dict_set[w]) > 1:
@@ -53,6 +54,7 @@ for w in dict_set:
       count = count + 1
 print("")
 
-
+# Scores are s * rows of VT
 for i in range(num_abstracts):
-    print("{0:30} {1: 2.4f} {2: 2.4f} {3: 2.4f} {4: 2.4f} {5: 2.4f}".format(titles[i] ,s[i]*VT[i][0], s[i]*VT[i][1], s[i]*VT[i][2], s[i]*VT[i][3], s[i]*(VT[i][4]) ) )
+    print("{0:30} {1: 2.4f} {2: 2.4f} {3: 2.4f} {4: 2.4f} {5: 2.4f}".format(titles[i] ,s[0]*VT[0][i], s[1]*VT[1][i], s[2]*VT[2][i], s[3]*VT[3][i], s[4]*(VT[4][i]) ) )
+
