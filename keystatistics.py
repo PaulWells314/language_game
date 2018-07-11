@@ -1,32 +1,31 @@
+"""Program to calculate document eigenvectors and scores.
+   Documents shoukd be in directory of this program and have extension ".keys"
+"""
 import glob
 import numpy as np
 import math
 from numpy import linalg as LA
+from collections import defaultdict
 
-num_abstracts = 0
-for f in glob.glob("*.keys"):
-    num_abstracts = num_abstracts + 1
+for (num_abstracts, f) in enumerate(glob.glob("*.keys"), 1):
+    pass
+    
 print("num abstracts ", num_abstracts)
 
 titles = ["" for x in range(num_abstracts)]
 
-dict_set = {}
+dict_set = defaultdict(set)
 for f in glob.glob("*.keys"):
    with open(f, 'r') as fin:
        for line in fin:
            if -1 == line.find("TITLE"):
                w = line.rstrip()
-               if w in dict_set:
-                  dict_set[w].add(f) 
+               dict_set[w].add(f) 
 
-               else:
-                  dict_set[w] = set()
-                  dict_set[w].add(f)
            else:
                id = int(f.lstrip("paper_").rstrip(".txt.keys")) -1
                titles[id] = line.replace("TITLE:", "").rstrip()
                   
-
 count = 0
 for w in dict_set:
     if len(dict_set[w]) > 1:
@@ -46,8 +45,8 @@ X = X -m
 
 U, s, VT = LA.svd(X, full_matrices = False)
 
-# Eigenvectors are columns of U  
-count = 0
+# Eigenvectors are columns of U
+count = 0  
 for w in dict_set:
    if len(dict_set[w]) > 1:
       print( "{0:20} {1: 2.4f} {2: 2.4f} {3: 2.4f} {4: 2.4f}".format(w, U[count][0], U[count][1], U[count][2], U[count][3]) )
