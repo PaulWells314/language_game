@@ -130,6 +130,12 @@ print("Original Class labels:")
 print(Y)
 print("")
 print("Predicted (LDA) Class labels:")
-print( clf.predict(X) )
+Z = clf.predict(X)
+print(Z)
+print("")
+print("Misclassified documents:")
+for i in range(num_abstracts):
+    if Y[i] != Z[i]:
+        print(titles[i])
 
 
