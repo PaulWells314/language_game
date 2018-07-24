@@ -1,13 +1,29 @@
-"""Program to calculate document eigenvectors and scores.
-   Documents shoukd be in directory of this program and have extension ".keys"
+"""Program carries out PCA (dimensional reduction) followed by LDA on Physics abstracts.
+   Abstracts are classified into PARTICLE (0), OPTICAL (2) or ASTRO (3)
+   Documents should be in directory of this program and have extension ".keys".
+   
+   Each document should contain the Classification in the form:
+   CLASSIFICATION: XXX  where XXX is PARTICLE, OPTICAL or ASTRO
+   
+   Each document should contain  s title in the form:
+   TITLE: XXX  where XXX is the title.
+   
+   Each word is on a separate line. common non-technical words were filtered out by separate program (keygen)
+   
 """
 import glob
 import numpy as np
 import math
 from numpy import linalg as LA
 from collections import defaultdict
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
-num_classes = 2
+num_pca = 5
+
+phys_id = {}
+phys_id["PARTICLE"] = 0
+phys_id["OPTICAL"]  = 1
+phys_id["ASTRO"]    = 2
 
 for (num_abstracts, f) in enumerate(glob.glob("*.keys"), 1):
     pass
@@ -48,9 +64,8 @@ for w in dict_set:
             X = np.vstack((X, vec))
         count = count = 1
         
-#m = X.mean(axis=0)
-#X = X -m
 
+#PCA via SVD
 U, s, VT = LA.svd(X, full_matrices = False)
 
 # Eigenvectors are columns of U
@@ -62,19 +77,27 @@ for w in dict_set:
 print("")
 
 classdict = {}
-classdict["PARTICLE"] = np.zeros(5)
-classdict["OPTICAL"] = np.zeros(5)
-classdict["ASTRO"] = np.zeros(5)
+classdict["PARTICLE"] = np.zeros(num_pca)
+classdict["OPTICAL"] = np.zeros(num_pca)
+classdict["ASTRO"] = np.zeros(num_pca)
 
 
 # Scores are s * rows of VT
+count  = 0
 for i in range(num_abstracts):
     print("{0:30} {1: 2.4f} {2: 2.4f} {3: 2.4f} {4: 2.4f} {5: 2.4f}".format(titles[i] ,s[0]*VT[0][i], s[1]*VT[1][i], s[2]*VT[2][i], s[3]*VT[3][i], s[4]*(VT[4][i]) ) )
-    nv = np.zeros(5)
-    for j in range(5):
+    nv = np.zeros(num_pca)
+    for j in range(num_pca):
         nv[j] = s[0]*VT[j][i]
     nv = nv /LA.norm(nv) 
-    
+    if count == 0:
+        X = nv
+        Y = phys_id[classification[i]]
+    else:
+        X = np.vstack((X, nv))
+        Y = np.hstack((Y, phys_id[classification[i]]))
+    count  = count + 1
+
     print(i, " ", titles[i]) 
     classdict[classification[i]] = np.add(classdict[classification[i]], nv)     
 
@@ -85,9 +108,11 @@ print("OPTICAL ", classdict["OPTICAL"])
 print("")
 print("ASTRO ", classdict["ASTRO"])
 print("")
+
+# This prints out dot products of each PCA reduced vector with mean of that class
 for i in range(num_abstracts):
-    nv = np.zeros(5)
-    for j in range(5):
+    nv = np.zeros(num_pca)
+    for j in range(num_pca):
         nv[j] = s[0]*VT[j][i]
     d0 = np.dot(nv, classdict["PARTICLE"])
     d0 = d0/(LA.norm(nv) * LA.norm(classdict["PARTICLE"]) )
@@ -96,5 +121,15 @@ for i in range(num_abstracts):
     d2 = np.dot(nv, classdict["ASTRO"])
     d2 = d2/(LA.norm(nv) * LA.norm(classdict["ASTRO"]) )
     print(titles[i], d0, d1, d2 )
+  
+#LDA
+clf = LinearDiscriminantAnalysis()
+clf.fit(X, Y)
+print("")
+print("Original Class labels:")
+print(Y)
+print("")
+print("Predicted (LDA) Class labels:")
+print( clf.predict(X) )
 
 
