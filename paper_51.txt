@@ -1,0 +1,5 @@
+Femtoscopic correlations between charged pions and kaons for different charge combinations are measured in Pb−Pb
+collisions at √sNN = 2.76 TeV with ALICE at the LHC. The three-dimensional pion-kaon (π − K) correlation functions
+and double ratios in the out-side-long pair rest frame are studied in different centrality bins. The π − K femtoscopic
+source size parameter (Rout) and emission asymmetry (µout) are extracted. It is observed that the average source size of
+the system and the emission asymmetry between pions and kaons increase from peripheral to central events.

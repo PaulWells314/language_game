@@ -1,0 +1,12 @@
+We report the first observation of the parity-violating 2.2 MeV gamma-ray asymmetry A
+np γ in neutron-proton capture using polarized cold neutrons incident on a liquid parahydrogen target at the
+Spallation Neutron Source at Oak Ridge National Laboratory. A np γ isolates the ∆I = 1, 3S1 → 3P1
+component of the weak nucleon-nucleon interaction, which is dominated by pion exchange and can
+be directly related to a single coupling constant in either the DDH meson exchange model or pionless
+EFT. We measured A np
+γ = (−3.0 ± 1.4(stat.) ± 0.2(sys.)) × 10−8 , which implies a DDH weak πNN
+coupling of h 1 π = (2.6±1.2(stat.)±0.2(sys.))×10−7
+and a pionless EFT constant of C 3S1→3P1 /C0 =
+(−7.4±3.5(stat.)±0.5(sys.))×10−11 MeV−1
+. We describe the experiment, data analysis, systematic
+uncertainties, and the implications of the result.

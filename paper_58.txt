@@ -1,0 +1,9 @@
+It is thought that the spacetime metric around astrophysical black holes is well described by the
+Kerr solution of Einstein’s gravity. However, a robust observational evidence of the Kerr nature
+of these objects is still lacking. Here we fit the X-ray spectrum of the stellar-mass black hole in
+GS 1354–645 with a disk reflection model beyond Einstein’s gravity in order test the Kerr black
+hole hypothesis. We consider the Johannsen metric with the deformation parameters α13 and α22.
+The Kerr metric is recovered for α13 = α22 = 0. For α22 = 0, our measurements of the black hole
+spin and of the deformation parameter α13 are a∗ > 0.975 and −0.34 < α13 < 0.16, respectively.
+For α13 = 0, we find a∗ > 0.975 and −0.09 < α22 < 0.42. All the reported uncertainties are at 99%
+of confidence level for two relevant parameters.
