@@ -17,13 +17,16 @@ import math
 from numpy import linalg as LA
 from collections import defaultdict
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
 
-num_pca = 5
+num_pca = 8
 
 phys_id = {}
 phys_id["PARTICLE"] = 0
 phys_id["OPTICAL"]  = 1
 phys_id["ASTRO"]    = 2
+phys_id["GR"]       = 3
 
 for (num_abstracts, f) in enumerate(glob.glob("*.keys"), 1):
     pass
@@ -80,6 +83,7 @@ classdict = {}
 classdict["PARTICLE"] = np.zeros(num_pca)
 classdict["OPTICAL"] = np.zeros(num_pca)
 classdict["ASTRO"] = np.zeros(num_pca)
+classdict["GR"] = np.zeros(num_pca)
 
 
 # Scores are s * rows of VT
@@ -108,6 +112,8 @@ print("OPTICAL ", classdict["OPTICAL"])
 print("")
 print("ASTRO ", classdict["ASTRO"])
 print("")
+print("GR ", classdict["GR"])
+print("")
 
 # This prints out dot products of each PCA reduced vector with mean of that class
 for i in range(num_abstracts):
@@ -120,7 +126,9 @@ for i in range(num_abstracts):
     d1 = d1/(LA.norm(nv) * LA.norm(classdict["OPTICAL"]) )
     d2 = np.dot(nv, classdict["ASTRO"])
     d2 = d2/(LA.norm(nv) * LA.norm(classdict["ASTRO"]) )
-    print(titles[i], d0, d1, d2 )
+    d3 = np.dot(nv, classdict["GR"])
+    d3 = d3/(LA.norm(nv) * LA.norm(classdict["GR"]) )
+    print(titles[i], d0, d1, d2, d3 )
   
 #LDA
 clf = LinearDiscriminantAnalysis()
@@ -137,5 +145,19 @@ print("Misclassified documents:")
 for i in range(num_abstracts):
     if Y[i] != Z[i]:
         print(titles[i])
+        
+#tSNE visualisation
+X_embedded = TSNE(n_components=2, n_iter = 100000, init = 'pca').fit_transform(X)
+for i in range(num_abstracts):
+    print(Y[i], X_embedded[i][0], X_embedded[i][1] )
+    
+fig = plt.figure(figsize=(8,8))
+
+x  = np.transpose(X_embedded)[0]
+y  = np.transpose(X_embedded)[1]
+c  = Y
+
+plt.scatter(x, y, c = c)
+plt.show()
 
 
