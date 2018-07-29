@@ -29,6 +29,8 @@ phys_id["OPTICAL"]  = 1
 phys_id["ASTRO"]    = 2
 phys_id["GR"]       = 3
 
+labels = ["PARTICLE", "OPTICAL", "ASTRO", "GR"]
+
 
 # Reverse lookup
 id_to_phys = {}
@@ -161,7 +163,7 @@ for i in range(num_abstracts):
   
 #LDA
 clf = LinearDiscriminantAnalysis()
-clf.fit(XTrain, Y)
+XTrain_new = clf.fit_transform(XTrain, Y)
 print("")
 print("Original Class labels:")
 print(Y)
@@ -169,6 +171,15 @@ print("")
 print("Predicted (LDA) Class labels on Training Set:")
 Z = clf.predict(XTrain)
 print(Z)
+fig = plt.figure(figsize=(8,8))
+
+x  = np.transpose(XTrain_new)[0]
+y  = np.transpose(XTrain_new)[1]
+c  = Y
+
+plt.scatter(x, y, c = c)
+plt.title("LDA of Physics abstracts")
+plt.show()
 print("")
 print("Misclassified Training documents:")
 
@@ -193,11 +204,13 @@ print()
 X_embedded = TSNE(n_components=2, n_iter = 100000, init = 'pca').fit_transform(XTrain)
 
 fig = plt.figure(figsize=(8,8))
+ax  = fig.add_subplot(1, 1, 1)
 
 x  = np.transpose(X_embedded)[0]
 y  = np.transpose(X_embedded)[1]
 c  = Y
 
-plt.scatter(x, y, c = c)
+plt.scatter(x, y, c=c)
+plt.title("t-SNE plot of Physics abstracts")
 plt.show()
 
