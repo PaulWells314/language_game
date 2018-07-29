@@ -1,0 +1,12 @@
+Using two novel methods, pair invariant mass (minv) and comparative measurements with respect to reaction plane
+(ΨRP) and participant plane (ΨPP), we isolate the possible chiral magnetic effect (CME) from backgrounds in 200 GeV
+Au+Au collisions at STAR. The invariant mass method identifies the resonance background contributions, coupled with
+the elliptic flow (v2), to the charge correlator CME observable (∆γ). At high mass (minv > 1.5 GeV/c2) where resonance
+contribution is small, we obtain the average ∆γ magnitude. In the low mass region (minv < 1.5 GeV/c2), resonance peaks
+are observed in ∆γ(minv). An event shape engineering (ESE) method is used to model the background shape in minv to
+extract the potential CME signal at low minv. In the comparative method, the ΨRP is assessed by spectator neutrons
+measured by ZDC, and the ΨPP by the 2nd-harmonic event plane measured by the TPC. The v2 is stronger along ΨPP
+and weaker along ΨRP; in contrast, the magnetic field, mainly from spectator protons, is weaker along ΨPP and stronger
+along ΨRP. As a result, the ∆γ measured with respect to ΨRP and ΨPP contain different amounts of CME and background,
+and can thus determine these two contributions. It is found that the possible CME signals with background isolation by
+these two novel methods are small, on the order of a few percent of the inclusive ∆γ measurements.

@@ -1,9 +1,9 @@
 """Program carries out PCA (dimensional reduction) followed by LDA on Physics abstracts.
-   Abstracts are classified into PARTICLE (0), OPTICAL (2) or ASTRO (3)
+   Abstracts are classified into PARTICLE (0), OPTICAL (1), ASTRO (3), or GR(4)
    Documents should be in directory of this program and have extension ".keys".
    
    Each document should contain the Classification in the form:
-   CLASSIFICATION: XXX  where XXX is PARTICLE, OPTICAL or ASTRO
+   CLASSIFICATION: XXX  where XXX is PARTICLE, OPTICAL, ASTRO, or GR
    
    Each document should contain  s title in the form:
    TITLE: XXX  where XXX is the title.
@@ -11,6 +11,7 @@
    Each word is on a separate line. common non-technical words were filtered out by separate program (keygen)
    
 """
+import sys
 import glob
 import numpy as np
 import math
@@ -27,6 +28,12 @@ phys_id["PARTICLE"] = 0
 phys_id["OPTICAL"]  = 1
 phys_id["ASTRO"]    = 2
 phys_id["GR"]       = 3
+
+
+# Reverse lookup
+id_to_phys = {}
+for j in phys_id:
+    id_to_phys[phys_id[j]] = j
 
 for (num_abstracts, f) in enumerate(glob.glob("*.keys"), 1):
     pass
@@ -48,6 +55,7 @@ for f in glob.glob("*.keys"):
            elif -1 != line.find("CLASSIFICATION"):
                id = int(f.lstrip("paper_").rstrip(".txt.keys")) -1
                classification[id] = line.replace("CLASSIFICATION:", "").rstrip().lstrip()
+               print(id,classification[id] )
            else:
                w = line.rstrip()
                dict_set[w].add(f) 
@@ -88,6 +96,8 @@ classdict["GR"] = np.zeros(num_pca)
 
 # Scores are s * rows of VT
 count  = 0
+train_count = 0
+test_count = 0
 for i in range(num_abstracts):
     print("{0:30} {1: 2.4f} {2: 2.4f} {3: 2.4f} {4: 2.4f} {5: 2.4f}".format(titles[i] ,s[0]*VT[0][i], s[1]*VT[1][i], s[2]*VT[2][i], s[3]*VT[3][i], s[4]*(VT[4][i]) ) )
     nv = np.zeros(num_pca)
@@ -96,14 +106,32 @@ for i in range(num_abstracts):
     nv = nv /LA.norm(nv) 
     if count == 0:
         X = nv
-        Y = phys_id[classification[i]]
     else:
         X = np.vstack((X, nv))
-        Y = np.hstack((Y, phys_id[classification[i]]))
+        
+    #Training data
+    if classification[i] != 'UNKNOWN':
+        if train_count == 0:        
+            Y = phys_id[classification[i]]
+            XTrain = nv
+        else:
+            Y = np.hstack((Y, phys_id[classification[i]]))
+            XTrain = np.vstack((XTrain, nv))
+        train_count = train_count + 1
+        classdict[classification[i]] = np.add(classdict[classification[i]], nv)    
+       
+    #Test data     
+    else:
+        if test_count == 0:
+            XTest = nv
+        else:
+            XTest = np.vstack((XTest, nv))
+        test_count = test_count + 1
+        
     count  = count + 1
 
     print(i, " ", titles[i]) 
-    classdict[classification[i]] = np.add(classdict[classification[i]], nv)     
+     
 
 print("")
 print("PARTICLE ", classdict["PARTICLE"])
@@ -117,40 +145,53 @@ print("")
 
 # This prints out dot products of each PCA reduced vector with mean of that class
 for i in range(num_abstracts):
-    nv = np.zeros(num_pca)
-    for j in range(num_pca):
-        nv[j] = s[0]*VT[j][i]
-    d0 = np.dot(nv, classdict["PARTICLE"])
-    d0 = d0/(LA.norm(nv) * LA.norm(classdict["PARTICLE"]) )
-    d1 = np.dot(nv, classdict["OPTICAL"])
-    d1 = d1/(LA.norm(nv) * LA.norm(classdict["OPTICAL"]) )
-    d2 = np.dot(nv, classdict["ASTRO"])
-    d2 = d2/(LA.norm(nv) * LA.norm(classdict["ASTRO"]) )
-    d3 = np.dot(nv, classdict["GR"])
-    d3 = d3/(LA.norm(nv) * LA.norm(classdict["GR"]) )
-    print(titles[i], d0, d1, d2, d3 )
+    if classification[i] != 'UNKNOWN':
+        nv = np.zeros(num_pca)
+        for j in range(num_pca):
+            nv[j] = s[0]*VT[j][i]
+        d0 = np.dot(nv, classdict["PARTICLE"])
+        d0 = d0/(LA.norm(nv) * LA.norm(classdict["PARTICLE"]) )
+        d1 = np.dot(nv, classdict["OPTICAL"])
+        d1 = d1/(LA.norm(nv) * LA.norm(classdict["OPTICAL"]) )
+        d2 = np.dot(nv, classdict["ASTRO"])
+        d2 = d2/(LA.norm(nv) * LA.norm(classdict["ASTRO"]) )
+        d3 = np.dot(nv, classdict["GR"])
+        d3 = d3/(LA.norm(nv) * LA.norm(classdict["GR"]) )
+        print(titles[i], d0, d1, d2, d3 )
   
 #LDA
 clf = LinearDiscriminantAnalysis()
-clf.fit(X, Y)
+clf.fit(XTrain, Y)
 print("")
 print("Original Class labels:")
 print(Y)
 print("")
-print("Predicted (LDA) Class labels:")
-Z = clf.predict(X)
+print("Predicted (LDA) Class labels on Training Set:")
+Z = clf.predict(XTrain)
 print(Z)
 print("")
-print("Misclassified documents:")
+print("Misclassified Training documents:")
+
+
 for i in range(num_abstracts):
-    if Y[i] != Z[i]:
-        print(titles[i])
+    if classification[i] != 'UNKNOWN':
+        if Y[i] != Z[i]:
+            print(titles[i])
+
+print()         
+print("Predictions of test data:")
+j = 0
+for i in range(num_abstracts):
+    if classification[i] == 'UNKNOWN':
+        print(titles[i], id_to_phys[clf.predict(XTest[j].reshape(1,-1))[0]] ) 
+        j = j + 1       
+
+print()
+
         
 #tSNE visualisation
-X_embedded = TSNE(n_components=2, n_iter = 100000, init = 'pca').fit_transform(X)
-for i in range(num_abstracts):
-    print(Y[i], X_embedded[i][0], X_embedded[i][1] )
-    
+X_embedded = TSNE(n_components=2, n_iter = 100000, init = 'pca').fit_transform(XTrain)
+
 fig = plt.figure(figsize=(8,8))
 
 x  = np.transpose(X_embedded)[0]
@@ -159,5 +200,4 @@ c  = Y
 
 plt.scatter(x, y, c = c)
 plt.show()
-
 

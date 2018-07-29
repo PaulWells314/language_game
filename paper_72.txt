@@ -1,0 +1,11 @@
+Understanding light-matter interaction in disordered photonic media allows people to manipulate
+light scattering and achieve exciting applications using seemingly scrambled media. As the concentration
+of scattering particles rises, they are inclined to step into near fields of each other in deep
+subwavelength scale. The fundamental physics involving the interplay between disorder and nearfield
+interaction (NFI) is still not fully understood. We theoretically examine the role of NFI by
+analyzing the underlying multiple scattering mechanism. We find NFI leads to a stronger collective
+behavior involving more particles and widens the photonic pseudo-bandgap of disordered media. It
+also excites more weakly decayed longitudinal modes and results in higher local density of states. By
+introducing a sticky short-range order, we demonstrate the possibility of enhancing off-momentumshell
+NFI of multiple scattering process. Our results have profound implications in understanding
+and harnessing nanoscale light-matter interaction for novel disordered photonic devices.
