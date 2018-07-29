@@ -20,6 +20,7 @@ from collections import defaultdict
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 num_pca = 8
 
@@ -177,7 +178,17 @@ x  = np.transpose(XTrain_new)[0]
 y  = np.transpose(XTrain_new)[1]
 c  = Y
 
-plt.scatter(x, y, c = c)
+class_colours = ['r', 'b', 'g', 'y']
+recs = []
+for i in range(0,len(class_colours)):
+    recs.append(mpatches.Rectangle((0,0),1,1,fc=class_colours[i]))
+plt.legend(recs,labels,loc=4)
+
+colors = []
+for i in Y:
+    colors.append(class_colours[i])
+
+plt.scatter(x, y, c = colors)
 plt.title("LDA of Physics abstracts")
 plt.show()
 print("")
@@ -213,4 +224,6 @@ c  = Y
 plt.scatter(x, y, c=c)
 plt.title("t-SNE plot of Physics abstracts")
 plt.show()
+
+
 
