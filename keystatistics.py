@@ -17,6 +17,7 @@ import numpy as np
 import math
 from numpy import linalg as LA
 from collections import defaultdict
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
@@ -161,6 +162,17 @@ for i in range(num_abstracts):
         d3 = np.dot(nv, classdict["GR"])
         d3 = d3/(LA.norm(nv) * LA.norm(classdict["GR"]) )
         print(titles[i], d0, d1, d2, d3 )
+		
+#QDA
+clf = QuadraticDiscriminantAnalysis()
+clf.fit(XTrain, Y)
+print("")
+print("Original Class labels:")
+print(Y)
+print("")
+print("Predicted (QDA) Class labels on Training Set:")
+Z = clf.predict(XTrain)
+print(Z)
   
 #LDA
 clf = LinearDiscriminantAnalysis()
@@ -186,7 +198,7 @@ plt.legend(recs,labels,loc=4)
 
 colors = []
 for i in Y:
-    colors.append(class_colours[i])
+  colors.append(class_colours[i])
 
 plt.scatter(x, y, c = colors)
 plt.title("LDA of Physics abstracts")
