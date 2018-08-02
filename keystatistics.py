@@ -20,6 +20,7 @@ from collections import defaultdict
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.manifold import TSNE
+from sklearn.naive_bayes import GaussianNB
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
@@ -78,7 +79,10 @@ for w in dict_set:
         else:
             X = np.vstack((X, vec))
         count = count = 1
-        
+		
+		
+	
+
 
 #PCA via SVD
 U, s, VT = LA.svd(X, full_matrices = False)
@@ -162,25 +166,31 @@ for i in range(num_abstracts):
         d3 = np.dot(nv, classdict["GR"])
         d3 = d3/(LA.norm(nv) * LA.norm(classdict["GR"]) )
         print(titles[i], d0, d1, d2, d3 )
-		
-#QDA
-clf = QuadraticDiscriminantAnalysis()
-clf.fit(XTrain, Y)
+
 print("")
 print("Original Class labels:")
 print(Y)
 print("")
+#Gaussian Naive Bayesian
+gnb = GaussianNB()
+y_pred = gnb.fit(XTrain, Y).predict(XTrain)
+print("Predicted (GNB) Class labels on Training Set:")
+print(y_pred)
+print("")
+        	
+#QDA
+clf = QuadraticDiscriminantAnalysis()
+clf.fit(XTrain, Y)
+
 print("Predicted (QDA) Class labels on Training Set:")
 Z = clf.predict(XTrain)
 print(Z)
-  
+
 #LDA
 clf = LinearDiscriminantAnalysis()
 XTrain_new = clf.fit_transform(XTrain, Y)
 print("")
-print("Original Class labels:")
-print(Y)
-print("")
+
 print("Predicted (LDA) Class labels on Training Set:")
 Z = clf.predict(XTrain)
 print(Z)
