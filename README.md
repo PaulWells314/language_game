@@ -17,4 +17,4 @@ TITLE: Galaxy_correlation
 
 CLASSIFICATION: UNKNOWN
 
-CLASSIFICATION can be PARTICLE, OPTICAL, ASTRO, GR, or UNKNOWN. UNKNOWN inicates test data without label.
+CLASSIFICATION can be PARTICLE, OPTICAL, ASTRO, GR, or UNKNOWN. UNKNOWN indicates test data without label.
