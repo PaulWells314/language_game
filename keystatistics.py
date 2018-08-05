@@ -21,6 +21,7 @@ from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.manifold import TSNE
 from sklearn.naive_bayes import GaussianNB
+from sklearn import svm
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
@@ -223,7 +224,7 @@ for i in range(num_abstracts):
             print(titles[i])
 
 print()         
-print("Predictions of test data:")
+print("LDA Predictions of test data:")
 j = 0
 for i in range(num_abstracts):
     if classification[i] == 'UNKNOWN':
@@ -231,6 +232,17 @@ for i in range(num_abstracts):
         j = j + 1       
 
 print()
+
+#SVM
+clf = svm.SVC()
+clf.fit(XTrain, Y)
+
+print("SVM Predictions of test data:")
+j = 0
+for i in range(num_abstracts):
+    if classification[i] == 'UNKNOWN':
+        print(titles[i], id_to_phys[clf.predict(XTest[j].reshape(1,-1))[0]] ) 
+        j = j + 1   
 
         
 #tSNE visualisation
